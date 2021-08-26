@@ -15,6 +15,10 @@ jobs: #this section contains the tasks / jobs that must be executed
       CLIENT_ID: ${{ secrets.CLIENT_ID }}
       CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
     steps:
+      - name: Set Timezone
+        uses: szenius/set-timezone@v1.0
+        with:
+          timezoneLinux: "Europe/Paris"
       - name: checkout on main
         uses: actions/checkout@main # action that make a checkout on the main branch
         with:
