@@ -9,6 +9,9 @@
                 Organisez des événements virtuels & hybrides en toute simplicité.
               </p>
             </div>
+            <p>
+              hello : {{ events }}
+            </p>
 
             <div class="py-10">
               <form @submit.prevent="submit" class="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 items-end">
@@ -18,11 +21,11 @@
                 </div>
                 <div class="col-span-1">
                   <label for="start_date" class="block text-sm font-medium text-black tracking-wide">Date de debut</label>
-                  <input type="date" name="start_date" id="start_date" v-model="form.start_date" class="mt-1 px-3 py-2 focus:outline-none border block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                  <input type="datetime-local" name="start_date" id="start_date" v-model="form.start_date" class="mt-1 px-3 py-2 focus:outline-none border block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                 </div>
                 <div class="col-span-1">
                   <label for="end_date" class="block text-sm font-medium text-black tracking-wide">Date de fin</label>
-                  <input type="date" name="end_date" id="end_date" v-model="form.end_date" class="mt-1 px-3 py-2 focus:outline-none border block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                  <input type="datetime-local" name="end_date" id="end_date" v-model="form.end_date" class="mt-1 px-3 py-2 focus:outline-none border block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                 </div>
                 <div>
                   <button type="submit" class="inline-flex items-center px-8 py-3 border border-transparent text-sm leading-4 font-bold uppercase rounded-md shadow-sm text-white bg-gray-900 focus:outline-none">
@@ -113,7 +116,7 @@
           headers: { 'Content-type': 'application/json', 'Authorization': 'Bearer ' + token.access_token },
         });
         const data = await events.json();
-        console.log('Data => ', data);
+        this.events = JSON.stringify(data);
       },
       methods: {
         async submit() {
@@ -133,14 +136,12 @@
               method: 'POST',
               headers: { 'Content-type': 'application/json', 'Accept': 'application/json', 'Authorization': 'Bearer ' + token.access_token },
               body: JSON.stringify({
-                items: {
-                  name: this.form.name,
-                  start_date: this.form.start_date,
-                  end_date: this.form.end_date,
-                  main_manager_id: 5962,
-                  default_locale: 'fr_FR',
-                  available_locales: 'fr_FR'
-                }
+                name: { en: this.form.name, fr: this.form.name },
+                start_date: this.form.start_date,
+                end_date: this.form.end_date,
+                main_manager_id: 5962,
+                default_locale: 'fr',
+                available_locales: ['fr']
               })
             });
             console.log('Form submitted', this.form);

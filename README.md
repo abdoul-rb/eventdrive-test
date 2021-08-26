@@ -1,4 +1,4 @@
-# eventdrive
+# Eventdrive
 
 ## Build Setup
 
