@@ -19,7 +19,7 @@ fetch('https://api.dev.eventdrive.com/public/v1/token', {
   code: res.status
 })))
 .then(({ data, code }) => {
-  fs.appendFile('logs_api_call.txt', '[' + new Date().toLocaleString() + ']\t' + code + '\t' + JSON.stringify(data) + '\n', (error) => {
+  fs.appendFile('logs_api_call.txt', '[' + new Date().toLocaleString('fr') + ']\t' + code + '\t' + JSON.stringify(data) + '\n', (error) => {
     if(error) {
       console.error(error);
       return;
@@ -27,7 +27,7 @@ fetch('https://api.dev.eventdrive.com/public/v1/token', {
   })
 })
 .catch(customError => {
-  fs.appendFile('logs_api_call.txt', '[' + new Date().toLocaleString() + ']\t' + customError.code + '\t' + JSON.stringify(customError.data) + '\n', (error) => {
+  fs.appendFile('logs_api_call.txt', '[' + new Date().toLocaleString('fr') + ']\t' + customError.code + '\t' + JSON.stringify(customError.data) + '\n', (error) => {
     if(error) {
       console.error(error);
       return;
