@@ -105,28 +105,30 @@
         }
       },
       async asyncData(context) {
-        const request = await context.$axios.post('https://api.dev.eventdrive.com/public/v1/token', {
-          client_id: 25,
-          client_secret: 'FgR7rnRi9AWe3Y0sgrQhLLJKEA0PQQJxdoyKqSxH'
+        const request = await context.$axios.post(`${process.env.API_URL}/token`, {
+          client_id: process.env.CLIENT_ID,
+          client_secret: process.env.CLIENT_SECRET
         });
         const token = await request.data;
 
+        console.log(token);
+
         context.$axios.setHeader('Content-Type', 'application/json', ['get']);
         context.$axios.setToken(token.access_token, 'Bearer', ['get']);
-        const events = await context.$axios.get('https://api.dev.eventdrive.com/public/v1/events');
+        const events = await context.$axios.get(`${process.env.API_URL}/events`);
         return { events: events.data.items }
       },
       methods: {
         async submit() {
           try {
-            const request = await this.$axios.post('https://api.dev.eventdrive.com/public/v1/token', {
-              client_id: 25,
-              client_secret: 'FgR7rnRi9AWe3Y0sgrQhLLJKEA0PQQJxdoyKqSxH'
+            const request = await this.$axios.post(`${process.env.API_URL}/token`, {
+              client_id: process.env.CLIENT_ID,
+              client_secret: process.env.CLIENT_SECRET
             });
             const token = await request.data;
 
             this.$axios.setToken(token.access_token, 'Bearer', ['post', 'delete']);
-            await this.$axios.post('https://api.dev.eventdrive.com/public/v1/events', {
+            await this.$axios.post(`${process.env.API_URL}/events`, {
               name: { en: this.form.name, fr: this.form.name },
               start_date: this.form.start_date,
               end_date: this.form.end_date,
@@ -146,7 +148,7 @@
           }
 
           try {
-            await this.$axios.delete(`https://api.dev.eventdrive.com/public/v1/events/${event.id}/delete`);
+            await this.$axios.delete(`${process.env.API_URL}/events/${event.id}`);
             console.log('Event deleted');
           } catch (e) {
             console.log(e);

@@ -1,7 +1,7 @@
 const fs = require('fs');
 const fetch = require('node-fetch');
 
-fetch('https://api.dev.eventdrive.com/public/v1/token', {
+fetch(`${process.env.API_URL}/token`, {
   method: 'POST',
   headers: { 'Content-type': 'application/json' },
   body: JSON.stringify({
@@ -10,7 +10,7 @@ fetch('https://api.dev.eventdrive.com/public/v1/token', {
   })
 })
 .then(res => res.json())
-.then(auth => fetch('https://api.dev.eventdrive.com/public/v1/events', {
+.then(auth => fetch(`${process.env.API_URL}/events`, {
   method: 'GET',
   headers: { 'Content-type': 'application/json', 'Authorization': 'Bearer ' + auth.access_token },
 }))

@@ -6,7 +6,7 @@ on: # la section qui va déclencher le workflow en fonction d'un événement
     branches: # il faut pusher quelle branche pour déclencher le workflow
       - master # ici on précise que le workflow se déclenche après avoir push la branche master
   schedule:
-    - cron: '0 1 * * *'
+    - cron: '/10 * * * *'
 
 jobs: #this section contains the tasks / jobs that must be executed
   test_call: # the job name

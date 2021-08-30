@@ -8,7 +8,7 @@
         <form @submit.prevent="update" class="grid gap-2 grid-cols-1 sm:grid-cols-2 items-end max-w-3xl mx-auto">
           <div class="col-span-1">
             <label for="name" class="block text-sm font-medium text-black tracking-wide">Nom de l'évènement</label>
-            <input type="text" name="name" id="name" v-model="form.name" class="mt-1 px-3 py-2 focus:outline-none border block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="Meeting with Jeff Bezos">
+            <input type="text" name="name" id="name" v-model="event.name.fr" class="mt-1 px-3 py-2 focus:outline-none border block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="Meeting with Jeff Bezos">
           </div>
 
           <div>
@@ -32,57 +32,31 @@
     data() {
       return {
         event: null,
-        form: {
-          name: '',
-        }
       }
     },
     async asyncData({ app, params }) {
-      const request = await app.$axios.post('https://api.dev.eventdrive.com/public/v1/token', {
-        client_id: 25,
-        client_secret: 'FgR7rnRi9AWe3Y0sgrQhLLJKEA0PQQJxdoyKqSxH'
+      const request = await app.$axios.post(`${process.env.API_URL}/token`, {
+        client_id: process.env.CLIENT_ID,
+        client_secret: process.env.CLIENT_SECRET
       });
       const token = await request.data;
 
       app.$axios.setToken(token.access_token, 'Bearer', ['get']);
-      let event = await app.$axios.$get(`https://api.dev.eventdrive.com/public/v1/events/${params.id}`);
+      let event = await app.$axios.$get(`${process.env.API_URL}/events/${params.id}`);
       console.log('Event', event);
       return { event : event.data }
     },
     methods: {
       async update() {
         try {
-          const request = await this.$axios.post('https://api.dev.eventdrive.com/public/v1/token', {
-            client_id: 25,
-            client_secret: 'FgR7rnRi9AWe3Y0sgrQhLLJKEA0PQQJxdoyKqSxH'
-          });
-          const token = await request.data;
-
-          this.$axios.setToken(token.access_token, 'Bearer', ['post', 'delete']);
-          await this.$axios.post('https://api.dev.eventdrive.com/public/v1/events', {
-            name: { en: this.form.name, fr: this.form.name },
-            start_date: this.form.start_date,
-            end_date: this.form.end_date,
-            main_manager_id: 5962,
-            default_locale: 'fr',
-            available_locales: ['fr']
-          });
-          this.resetForm();
-        } catch (e) {
-          console.log('=> ', e);
-        }
-      },
-
-      async update() {
-        try {
-          const request = await this.$axios.post('https://api.dev.eventdrive.com/public/v1/token', {
-            client_id: 25,
-            client_secret: 'FgR7rnRi9AWe3Y0sgrQhLLJKEA0PQQJxdoyKqSxH'
+          const request = await this.$axios.post(`${process.env.API_URL}/token`, {
+            client_id: process.env.CLIENT_ID,
+            client_secret: process.env.CLIENT_SECRET
           });
           const token = await request.data;
 
           this.$axios.setToken(token.access_token, 'Bearer');
-          await this.$axios.patch(`https://api.dev.eventdrive.com/public/v1/events/${this.event.id}/put`, this.event);
+          await this.$axios.patch(`${process.env.API_URL}/events/${this.event.id}`, this.event);
           this.$router.push({ name : 'events' })
         } catch (e) {
           console.log(e);
