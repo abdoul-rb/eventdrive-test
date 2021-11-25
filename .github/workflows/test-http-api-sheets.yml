@@ -1,0 +1,42 @@
+name: Logs for Eventdrive API call
+
+on: # la section qui va déclencher le workflow en fonction d'un événement
+  workflow_dispatch: # pour un déclenchement manuel via l'UI de Github
+  push: # Pour un déclenchement après le push
+    branches: # il faut pusher quelle branche pour déclencher le workflow
+      - master # ici on précise que le workflow se déclenche après avoir push la branche master
+  schedule:
+    - cron: '*/100 * * * *'
+
+jobs: #this section contains the tasks / jobs that must be executed
+  test_call: # the job name
+    runs-on: 'ubuntu-latest' # this job must run on a Ubuntu container
+    env:
+      CLIENT_ID: ${{ secrets.CLIENT_ID }}
+      CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+      API_URL: ${{ secrets.API_URL }}
+      CREDS: ${{ secrets.CREDS }}
+      SPREADSHEET_ID: ${{ secrets.SPREADSHEET_ID }}
+    steps:
+      - name: Set Timezone
+        uses: szenius/set-timezone@v1.0
+        with:
+          timezoneLinux: "Europe/Paris"
+      - name: checkout on main
+        uses: actions/checkout@main # action that make a checkout on the main branch
+        with:
+          ref: ${{ github.read_ref }}
+      - name: "Init repository"
+        uses: actions/setup-node@v2
+      - name: "Installing dependencies"
+        run: npm install
+      - name: "Execute script test for API"
+        run: node script_call_api.js
+      - name: Commit differences # commit if differences are tracked after updates (previous step)
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: API calling test
+          commit_user_name: GitHub Actions Bot
+          commit_author: GitHub Action <actions@github.com>
+          skip_dirty_check: false
+          push_options:  --force
