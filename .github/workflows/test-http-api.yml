@@ -2,11 +2,11 @@ name: Logs for Eventdrive API call
 
 on: # la section qui va déclencher le workflow en fonction d'un événement
   workflow_dispatch: # pour un déclenchement manuel via l'UI de Github
-  push: # Pour un déclenchement après le push
-    branches: # il faut pusher quelle branche pour déclencher le workflow
-      - master # ici on précise que le workflow se déclenche après avoir push la branche master
-  schedule:
-    - cron: '*/100 * * * *'
+  # push: # Pour un déclenchement après le push
+    # branches: # il faut pusher quelle branche pour déclencher le workflow
+      # - master # ici on précise que le workflow se déclenche après avoir push la branche master
+  # schedule:
+    # - cron: '*/100 * * * *'
 
 jobs: #this section contains the tasks / jobs that must be executed
   test_call: # the job name
